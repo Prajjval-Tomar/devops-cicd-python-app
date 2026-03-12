@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: DevOps CI/CD Pipeline
 
 on:
   push:
@@ -12,22 +12,30 @@ jobs:
 
     steps:
 
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version: "3.9"
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
 
-    - name: Run tests
-      run: pytest
+    - name: Run Tests
+      run: |
+        pytest
 
-    - name: Build Docker image
-      run: docker build -t devops-demo .
+    - name: Build Docker Image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/devops-demo-app .
 
-    - name: Run Docker container
-      run: docker run -d -p 5000:5000 devops-demo
+    - name: Login to Docker Hub
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Push Docker Image
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/devops-demo-app
