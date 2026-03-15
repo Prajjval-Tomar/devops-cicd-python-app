@@ -3,3 +3,6 @@ pytest
 psutil
 python-json-logger
 prometheus-client
+requests
+openai
+dotenv

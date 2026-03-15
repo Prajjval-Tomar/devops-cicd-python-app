@@ -161,3 +161,13 @@ GitHub
 License
 
 This project is for educational and DevOps practice purposes.
+
+## All API End Ponts
+
+health
+info
+metrics
+system
+time
+ask-ai
+ai-analysis
