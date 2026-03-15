@@ -2,9 +2,35 @@ from flask import Flask, jsonify
 import psutil
 import datetime
 import socket
-
+import os
+import logging
+from pythonjsonlogger import jsonlogger
+from prometheus_client import Counter, generate_latest
 app = Flask(__name__)
 
+
+# ---------- Logging Setup ----------
+logger = logging.getLogger()
+logHandler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter()
+
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
+logger.setLevel(logging.INFO)
+
+# ---------- Metrics ----------
+REQUEST_COUNT = Counter("app_requests_total", "Total API Requests")
+
+# ---------- Environment ----------
+APP_VERSION = os.getenv("APP_VERSION", "1.0")
+
+# ---------- Middleware ----------
+@app.before_request
+def log_request():
+    logger.info("API request received")
+    
+# ---------- Routes ----------
+# ---------- API Endpoints ----------
 @app.route("/")
 def home():
     return "DevOps Monitoring API Running 🚀"
